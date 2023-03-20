@@ -1,0 +1,218 @@
+C51 COMPILER V8.05a   _MAIN                                                                06/15/2008 14:12:53 PAGE 1   
+
+
+C51 COMPILER V8.05a, COMPILATION OF MODULE _MAIN
+OBJECT MODULE PLACED IN _main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE _main.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #include <math.h>
+   3          
+   4          unsigned char Bright_Level[8]={0,40,80,120,150,180,210,240};
+   5          unsigned char counter=0;
+   6          unsigned char code a[8]={0x81,0x42,0x24,0x18,0x18,0x24,0x42,0x81};
+   7          unsigned char code b[8]={0xc3,0x66,0x3c,0x18,0x18,0x3c,0x66,0xc3};
+   8          unsigned char code c[8]={0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};
+   9          
+  10          void delay(unsigned int time)
+  11          {
+  12   1       while(time--);
+  13   1      }
+  14          
+  15          void flash1(unsigned int time)
+  16          {
+  17   1       unsigned int counter=0;
+  18   1       unsigned char i;
+  19   1       for(i=0;i<8;i++)
+  20   1       { 
+  21   2        delay(time);
+  22   2        P1=~a[counter++];
+  23   2        counter%=8;
+  24   2       } 
+  25   1      }
+  26          
+  27          void flash2(unsigned int time)
+  28          {
+  29   1       unsigned int counter=0;
+  30   1       unsigned char i;
+  31   1       for(i=0;i<8;i++)
+  32   1       { 
+  33   2        delay(time);
+  34   2        P1=~b[counter++];
+  35   2        counter%=8;
+  36   2       } 
+  37   1      }
+  38          
+  39          void flash3(unsigned int time)
+  40          {
+  41   1       unsigned int counter=0;
+  42   1       unsigned char i;
+  43   1       for(i=0;i<8;i++)
+  44   1       { 
+  45   2        delay(5000);
+  46   2        P1=~c[counter++];
+  47   2        counter%=8;
+  48   2       }
+  49   1       counter=0;
+  50   1       for(i=0;i<8;i++)
+  51   1       { 
+  52   2        delay(5000);
+  53   2        P1=~c[7-counter++];
+  54   2        counter%=8;
+  55   2       }
+C51 COMPILER V8.05a   _MAIN                                                                06/15/2008 14:12:53 PAGE 2   
+
+  56   1      }
+*** WARNING C280 IN LINE 39 OF _MAIN.C: 'time': unreferenced local variable
+  57          
+  58          /*************************
+  59          Timer 0 定时中断处理
+  60          **************************/ //timer init
+  61          void initTimer(void)
+  62          {
+  63   1       TMOD=0x01;
+  64   1       TH0=0xff;
+  65   1       TL0=0xff-46;
+  66   1       TR0=1;
+  67   1       ET0=1;
+  68   1       EA=1;
+  69   1      } //timer0/counter0 interrupt
+  70          
+  71          void timer0(void) interrupt 1
+  72          {
+  73   1       unsigned char i;
+  74   1       TR0=0;
+  75   1       TH0=0xff;
+  76   1       TL0=0xff-46;
+  77   1      
+  78   1       counter++;
+  79   1       for(i=0;i<8;i++)
+  80   1       {
+  81   2        if(counter>Bright_Level[i]) P1|=(1<<i);
+  82   2        else P1&=~(1<<i);
+  83   2       } 
+  84   1       TR0=1;
+  85   1      }
+  86          
+  87          void main()
+  88          {
+  89   1       int i,j;
+  90   1       unsigned char temp;
+  91   1       
+  92   1      
+  93   1       for(j=0;j<5;j++)
+  94   1       {
+  95   2        temp=0x01;
+  96   2        for(i=0;i<8;i++)
+  97   2        {
+  98   3         temp<<=1;
+  99   3         P1=~temp;
+ 100   3         delay(20000);
+ 101   3        }
+ 102   2       }
+ 103   1      
+ 104   1      
+ 105   1      initTimer();
+ 106   1       for(j=0;j<4;j++)
+ 107   1       {
+ 108   2        temp=Bright_Level[0];
+ 109   2        for(i=0;i<7;i++)
+ 110   2        {
+ 111   3         Bright_Level[i]=Bright_Level[i+1];
+ 112   3         delay(500);
+ 113   3        }
+ 114   2        Bright_Level[7]=temp;
+ 115   2        delay(500);
+ 116   2       }
+C51 COMPILER V8.05a   _MAIN                                                                06/15/2008 14:12:53 PAGE 3   
+
+ 117   1       
+ 118   1       for(i=0;i<8;i++)
+ 119   1       {
+ 120   2        Bright_Level[i]=0x00;
+ 121   2       }
+ 122   1      
+ 123   1       delay(30000);
+ 124   1      
+ 125   1      for(j=0;j<5;j++)
+ 126   1      {
+ 127   2       for(i=0;i<255;i++)
+ 128   2       {
+ 129   3        Bright_Level[3]=Bright_Level[4]=i;
+ 130   3        delay(50);
+ 131   3       }
+ 132   2       for(i=255;i>0;i--)
+ 133   2       {
+ 134   3        Bright_Level[3]=Bright_Level[4]=i;
+ 135   3        delay(50);
+ 136   3       }
+ 137   2      
+ 138   2        for(i=0;i<255;i++)
+ 139   2       {
+ 140   3        Bright_Level[2]=Bright_Level[5]=i;
+ 141   3        delay(50);
+ 142   3       }
+ 143   2       for(i=255;i>0;i--)
+ 144   2       {
+ 145   3        Bright_Level[2]=Bright_Level[5]=i;
+ 146   3        delay(50);
+ 147   3       }
+ 148   2      
+ 149   2       for(i=0;i<255;i++)
+ 150   2       {
+ 151   3        Bright_Level[1]=Bright_Level[6]=i;
+ 152   3        delay(50);
+ 153   3       }
+ 154   2       for(i=255;i>0;i--)
+ 155   2       {
+ 156   3        Bright_Level[1]=Bright_Level[6]=i;
+ 157   3        delay(50);
+ 158   3       }
+ 159   2      
+ 160   2       for(i=0;i<255;i++)
+ 161   2       {
+ 162   3        Bright_Level[0]=Bright_Level[7]=i;
+ 163   3        delay(50);
+ 164   3       }
+ 165   2       for(i=255;i>0;i--)
+ 166   2       {
+ 167   3        Bright_Level[0]=Bright_Level[7]=i;
+ 168   3        delay(50);
+ 169   3       }
+ 170   2       }
+ 171   1      
+ 172   1       EA=0;
+ 173   1      
+ 174   1       for(i=0;i<256;i++)
+ 175   1       {
+ 176   2        P1=~i;
+ 177   2        delay(10000);
+ 178   2       }
+C51 COMPILER V8.05a   _MAIN                                                                06/15/2008 14:12:53 PAGE 4   
+
+ 179   1      
+ 180   1       delay(10000);
+ 181   1       for(j=0;j<4;j++)
+ 182   1       {
+ 183   2       flash1(60000);
+ 184   2       flash2(60000);
+ 185   2       flash3(60000);
+ 186   2       }
+ 187   1       while(1);
+ 188   1      } 
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1205    ----
+   CONSTANT SIZE    =     24    ----
+   XDATA SIZE       =      9      10
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

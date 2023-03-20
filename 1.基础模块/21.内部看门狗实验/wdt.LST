@@ -1,0 +1,78 @@
+C51 COMPILER V6.12  WDT                                                                    12/24/2008 12:51:06 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE WDT
+OBJECT MODULE PLACED IN .\wdt.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\wdt.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <reg52.h>                     //52系列单片机头文件
+   2          
+   3          #define uchar unsigned char
+   4          
+   5          #define uint unsigned int 
+   6          
+   7          sfr WDT_CONTR=0xe1;
+   8          
+   9          sbit led1=P1^0;
+  10          sbit beep=P2^3;
+  11          
+  12          void delayms(uint xms)                                    
+  13          
+  14          {
+  15   1      
+  16   1               uint i,j;
+  17   1      
+  18   1               for(i=xms;i>0;i--)                         //i=xms即延时约xms毫秒
+  19   1      
+  20   1                        for(j=110;j>0;j--);
+  21   1      
+  22   1      }
+  23          
+  24          void main()
+  25          
+  26          {
+  27   1      
+  28   1            
+  29   1              WDT_CONTR=0x35;
+  30   1      
+  31   1               led1=0;
+  32   1      
+  33   1               delayms(500);
+  34   1      
+  35   1                led1=1;       
+  36   1            
+  37   1      	       beep=0;
+  38   1      			 delayms(100);
+  39   1      			 beep=1;
+  40   1                delayms(100);
+  41   1      			 
+  42   1               while(1) 
+  43   1      
+  44   1             {
+  45   2                        delayms(1000);
+  46   2      
+  47   2                  WDT_CONTR=0x35;
+  48   2                    	  
+  49   2      
+  50   2              }
+  51   1      
+  52   1               
+  53   1      }
+
+
+C51 COMPILER V6.12  WDT                                                                    12/24/2008 12:51:06 PAGE 2   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     74    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

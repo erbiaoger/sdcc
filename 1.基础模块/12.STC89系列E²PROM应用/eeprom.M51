@@ -1,0 +1,342 @@
+BL51 BANKED LINKER/LOCATER V4.13                                                        12/24/2008  15:58:28  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V4.13, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE eeprom.obj TO eeprom RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  eeprom.obj (EEPROM)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  eeprom (EEPROM)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0002H     UNIT         _DATA_GROUP_
+            DATA    000AH     0001H     UNIT         ?DT?EEPROM
+            IDATA   000BH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0008H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     0055H     UNIT         ?PR?MAIN?EEPROM
+            CODE    0063H     002BH     UNIT         ?PR?_DISPLAY?EEPROM
+            CODE    008EH     0024H     UNIT         ?PR?_DELAYMS?EEPROM
+            CODE    00B2H     0017H     UNIT         ?PR?_BYTE_WRITE?EEPROM
+            CODE    00C9H     0015H     UNIT         ?PR?_BYTE_READ?EEPROM
+            CODE    00DEH     0012H     UNIT         ?PR?_SECTORERASE?EEPROM
+            CODE    00F0H     0010H     UNIT         ?CO?EEPROM
+            CODE    0100H     000CH     UNIT         ?PR?ISP_IAP_ENABLE?EEPROM
+            CODE    010CH     000CH     UNIT         ?PR?ISP_IAP_DISABLE?EEPROM
+            CODE    0118H     000CH     UNIT         ?C_C51STARTUP
+            CODE    0124H     000BH     UNIT         ?PR?ISPGOON?EEPROM
+            CODE    012FH     0009H     UNIT         ?PR?TIMER0?EEPROM
+
+
+
+OVERLAY MAP OF MODULE:   eeprom (EEPROM)
+
+
+SEGMENT                              DATA_GROUP 
+  +--> CALLED SEGMENT              START    LENGTH
+--------------------------------------------------
+?C_C51STARTUP                      -----    -----
+  +--> ?PR?MAIN?EEPROM
+
+?PR?MAIN?EEPROM                    0008H    0002H
+  +--> ?PR?_BYTE_READ?EEPROM
+  +--> ?PR?_SECTORERASE?EEPROM
+  +--> ?PR?_BYTE_WRITE?EEPROM
+  +--> ?PR?_DISPLAY?EEPROM
+
+BL51 BANKED LINKER/LOCATER V4.13                                                      12/24/2008  15:58:28  PAGE 2
+
+
+?PR?_BYTE_READ?EEPROM              -----    -----
+  +--> ?PR?ISP_IAP_DISABLE?EEPROM
+
+?PR?ISP_IAP_DISABLE?EEPROM         -----    -----
+  +--> ?PR?ISPGOON?EEPROM
+
+?PR?ISPGOON?EEPROM                 -----    -----
+  +--> ?PR?ISP_IAP_ENABLE?EEPROM
+
+?PR?_SECTORERASE?EEPROM            -----    -----
+  +--> ?PR?ISP_IAP_DISABLE?EEPROM
+
+?PR?_BYTE_WRITE?EEPROM             -----    -----
+  +--> ?PR?ISPGOON?EEPROM
+  +--> ?PR?ISP_IAP_DISABLE?EEPROM
+
+?PR?_DISPLAY?EEPROM                -----    -----
+  +--> ?CO?EEPROM
+  +--> ?PR?_DELAYMS?EEPROM
+
+
+
+SYMBOL TABLE OF MODULE:  eeprom (EEPROM)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        EEPROM
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:00B0H.4       PUBLIC        T0
+  B:00D0H.6       PUBLIC        AC
+  D:00E6H         PUBLIC        ISP_TRIG
+  B:00B0H.5       PUBLIC        T1
+  B:0090H.0       PUBLIC        T2
+  B:00A8H.7       PUBLIC        EA
+  C:00F0H         PUBLIC        table
+  D:00A8H         PUBLIC        IE
+  C:00C9H         PUBLIC        _byte_read
+  B:00C8H.6       PUBLIC        EXF2
+  B:00B0H.7       PUBLIC        RD
+  B:00A8H.4       PUBLIC        ES
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  B:00B0H.2       PUBLIC        INT0
+  B:00D0H.7       PUBLIC        CY
+  B:0098H.1       PUBLIC        TI
+  B:00B0H.3       PUBLIC        INT1
+  D:00E5H         PUBLIC        ISP_CMD
+  C:0124H         PUBLIC        ISPgoon
+  B:00B8H.4       PUBLIC        PS
+  B:0090H.1       PUBLIC        T2EX
+  C:00B2H         PUBLIC        _byte_write
+  B:00D0H.2       PUBLIC        OV
+BL51 BANKED LINKER/LOCATER V4.13                                                      12/24/2008  15:58:28  PAGE 3
+
+
+  C:000EH         PUBLIC        main
+  B:00A0H.6       PUBLIC        dula
+  B:00C8H.1       PUBLIC        C_T2
+  B:00B0H.6       PUBLIC        WR
+  B:00A0H.7       PUBLIC        wela
+  B:00C8H.5       PUBLIC        RCLK
+  B:00C8H.4       PUBLIC        TCLK
+  D:00E3H         PUBLIC        ISP_ADDRH
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  D:00E4H         PUBLIC        ISP_ADDRL
+  B:0088H.1       PUBLIC        IE0
+  B:0088H.3       PUBLIC        IE1
+  B:00C8H.0       PUBLIC        CP_RL2
+  C:00DEH         PUBLIC        _SectorErase
+  B:00A8H.1       PUBLIC        ET0
+  B:00A8H.3       PUBLIC        ET1
+  B:0088H.5       PUBLIC        TF0
+  B:00A8H.5       PUBLIC        ET2
+  B:0088H.7       PUBLIC        TF1
+  B:00C8H.7       PUBLIC        TF2
+  B:0098H.2       PUBLIC        RB8
+  D:008CH         PUBLIC        TH0
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  B:0098H.3       PUBLIC        TB8
+  B:00A8H.2       PUBLIC        EX1
+  B:0088H.2       PUBLIC        IT1
+  B:00D0H.0       PUBLIC        P
+  B:0098H.7       PUBLIC        SM0
+  D:008AH         PUBLIC        TL0
+  D:000AH         PUBLIC        num
+  B:0098H.6       PUBLIC        SM1
+  B:0098H.5       PUBLIC        SM2
+  C:0094H         PUBLIC        _delayms
+  C:012FH         PUBLIC        timer0
+  B:00B8H.1       PUBLIC        PT0
+  D:00E7H         PUBLIC        ISP_CONTR
+  B:00B8H.3       PUBLIC        PT1
+  B:00D0H.3       PUBLIC        RS0
+  B:00B8H.5       PUBLIC        PT2
+  B:0088H.4       PUBLIC        TR0
+  B:00D0H.4       PUBLIC        RS1
+  B:0088H.6       PUBLIC        TR1
+  B:00C8H.2       PUBLIC        TR2
+  B:00B8H.0       PUBLIC        PX0
+  B:00B8H.2       PUBLIC        PX1
+  C:0063H         PUBLIC        _display
+  C:010FH         PUBLIC        ISP_IAP_disable
+  B:00C8H.3       PUBLIC        EXEN2
+  B:0098H.4       PUBLIC        REN
+  D:00C8H         PUBLIC        T2CON
+  D:00E2H         PUBLIC        ISP_DATA
+  B:00B0H.0       PUBLIC        RXD
+  B:00B0H.1       PUBLIC        TXD
+  C:0100H         PUBLIC        ISP_IAP_enable
+BL51 BANKED LINKER/LOCATER V4.13                                                      12/24/2008  15:58:28  PAGE 4
+
+
+  B:00D0H.5       PUBLIC        F0
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          L?0024
+  -------         ENDPROC       L?0024
+  -------         PROC          _DELAYMS
+  D:0006H         SYMBOL        xms
+  -------         DO            xms
+  D:0006H         SYMBOL        i
+  D:0004H         SYMBOL        j
+  -------         ENDDO         j
+  C:0094H         LINE#         25
+  C:0094H         LINE#         26
+  C:0094H         LINE#         28
+  C:009DH         LINE#         29
+  C:00B1H         LINE#         30
+  -------         ENDPROC       _DELAYMS
+  -------         PROC          _DISPLAY
+  D:0007H         SYMBOL        shi
+  D:0003H         SYMBOL        ge
+  C:0063H         LINE#         31
+  C:0065H         LINE#         32
+  C:0065H         LINE#         33
+  C:0067H         LINE#         34
+  C:006EH         LINE#         35
+  C:0070H         LINE#         36
+  C:0073H         LINE#         37
+  C:0075H         LINE#         38
+  C:0078H         LINE#         39
+  C:0078H         LINE#         40
+  C:007BH         LINE#         41
+  C:007DH         LINE#         42
+  C:0081H         LINE#         43
+  C:0083H         LINE#         44
+  C:0086H         LINE#         45
+  C:0088H         LINE#         46
+  C:008BH         LINE#         47
+  C:008BH         LINE#         48
+  -------         ENDPROC       _DISPLAY
+  -------         PROC          ISP_IAP_ENABLE
+  C:0100H         LINE#         51
+  C:0100H         LINE#         52
+  C:0100H         LINE#         53
+  C:0102H         LINE#         54
+  C:0105H         LINE#         55
+  C:0108H         LINE#         56
+  C:010BH         LINE#         57
+  -------         ENDPROC       ISP_IAP_ENABLE
+  -------         PROC          L?0025
+  -------         ENDPROC       L?0025
+  -------         PROC          ISP_IAP_DISABLE
+  C:010FH         LINE#         59
+  C:010FH         LINE#         60
+  C:010FH         LINE#         61
+  C:0112H         LINE#         62
+  C:0115H         LINE#         63
+  C:0117H         LINE#         64
+  -------         ENDPROC       ISP_IAP_DISABLE
+BL51 BANKED LINKER/LOCATER V4.13                                                      12/24/2008  15:58:28  PAGE 5
+
+
+  -------         PROC          ISPGOON
+  C:0124H         LINE#         66
+  C:0124H         LINE#         67
+  C:0124H         LINE#         68
+  C:0127H         LINE#         69
+  C:012AH         LINE#         70
+  C:012DH         LINE#         71
+  C:012EH         LINE#         72
+  -------         ENDPROC       ISPGOON
+  -------         PROC          _BYTE_READ
+  D:0004H         SYMBOL        byte_addr
+  C:00C9H         LINE#         74
+  C:00CDH         LINE#         75
+  C:00CDH         LINE#         76
+  C:00CFH         LINE#         77
+  C:00D2H         LINE#         78
+  C:00D5H         LINE#         79
+  C:00D8H         LINE#         80
+  C:00D8H         LINE#         81
+  C:00DBH         LINE#         82
+  C:00DDH         LINE#         83
+  -------         ENDPROC       _BYTE_READ
+  -------         PROC          _SECTORERASE
+  D:0006H         SYMBOL        sector_addr
+  -------         DO            sector_addr
+  D:0006H         SYMBOL        iSectorAddr
+  -------         ENDDO         iSectorAddr
+  C:00DEH         LINE#         85
+  C:00DEH         LINE#         86
+  C:00DEH         LINE#         88
+  C:00E2H         LINE#         89
+  C:00E4H         LINE#         90
+  C:00E7H         LINE#         91
+  C:00EAH         LINE#         92
+  C:00EDH         LINE#         93
+  C:00EDH         LINE#         94
+  -------         ENDPROC       _SECTORERASE
+  -------         PROC          _BYTE_WRITE
+  D:0002H         SYMBOL        byte_addr
+  D:0005H         SYMBOL        original_data
+  C:00B2H         LINE#         97
+  C:00B6H         LINE#         98
+  C:00B6H         LINE#         99
+  C:00B8H         LINE#         100
+  C:00BBH         LINE#         101
+  C:00BEH         LINE#         102
+  C:00C1H         LINE#         103
+  C:00C3H         LINE#         104
+  C:00C6H         LINE#         105
+  -------         ENDPROC       _BYTE_WRITE
+  -------         PROC          MAIN
+  -------         DO            MAIN
+  D:0008H         SYMBOL        a
+  D:0009H         SYMBOL        b
+  D:0001H         SYMBOL        num1
+  -------         ENDDO         num1
+  C:000EH         LINE#         107
+BL51 BANKED LINKER/LOCATER V4.13                                                      12/24/2008  15:58:28  PAGE 6
+
+
+  C:000EH         LINE#         108
+  C:000EH         LINE#         110
+  C:0011H         LINE#         111
+  C:0014H         LINE#         112
+  C:0017H         LINE#         113
+  C:0019H         LINE#         114
+  C:001BH         LINE#         115
+  C:001DH         LINE#         116
+  C:0026H         LINE#         117
+  C:002CH         LINE#         118
+  C:002EH         LINE#         119
+  C:002EH         LINE#         120
+  C:002EH         LINE#         121
+  C:0035H         LINE#         122
+  C:0035H         LINE#         123
+  C:0038H         LINE#         124
+  C:0039H         LINE#         125
+  C:003FH         LINE#         126
+  C:0046H         LINE#         127
+  C:0049H         LINE#         128
+  C:0049H         LINE#         129
+  C:004BH         LINE#         130
+  C:004BH         LINE#         131
+  C:0052H         LINE#         132
+  C:005AH         LINE#         133
+  C:005AH         LINE#         134
+  C:0061H         LINE#         135
+  -------         ENDPROC       MAIN
+  -------         PROC          TIMER0
+  C:012FH         LINE#         137
+  C:012FH         LINE#         139
+  C:0132H         LINE#         140
+  C:0135H         LINE#         141
+  C:0137H         LINE#         142
+  -------         ENDPROC       TIMER0
+  -------         ENDMOD        EEPROM
+
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

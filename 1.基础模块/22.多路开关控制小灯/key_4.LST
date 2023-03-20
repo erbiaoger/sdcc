@@ -1,0 +1,152 @@
+C51 COMPILER V6.12  KEY_4                                                                  12/25/2008 15:17:24 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE KEY_4
+OBJECT MODULE PLACED IN .\key_4.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\key_4.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          
+   2          #include <reg51.H> 
+   3          
+   4          sbit P3_4=P3^4;
+   5          sbit P3_5=P3^5;
+   6          sbit P3_6=P3^6;
+   7          sbit P3_7=P3^7;
+   8          
+   9          sbit P1_0=P1^0;
+  10          sbit P1_1=P1^1;
+  11          sbit P1_2=P1^2;
+  12          sbit P1_3=P1^3;
+  13          
+  14          void main(void) 
+  15          
+  16          
+  17          { 
+  18   1      
+  19   1      
+  20   1        while(1) 
+  21   1      
+  22   1      
+  23   1          { 
+  24   2      
+  25   2      
+  26   2            if(P3_4==0) 
+  27   2      
+  28   2      
+  29   2              { 
+  30   3      
+  31   3      
+  32   3                P1_0=0; 
+  33   3      
+  34   3      
+  35   3              } 
+  36   2      
+  37   2      
+  38   2              else 
+  39   2      
+  40   2      
+  41   2                { 
+  42   3      
+  43   3      
+  44   3                  P1_0=1; 
+  45   3      
+  46   3      
+  47   3                } 
+  48   2      
+  49   2      
+  50   2            if(P3_5==0) 
+  51   2      
+  52   2      
+  53   2              { 
+  54   3      
+  55   3      
+C51 COMPILER V6.12  KEY_4                                                                  12/25/2008 15:17:24 PAGE 2   
+
+  56   3                P1_1=0; 
+  57   3      
+  58   3      
+  59   3              } 
+  60   2      
+  61   2      
+  62   2              else 
+  63   2      
+  64   2      
+  65   2                { 
+  66   3      
+  67   3      
+  68   3                  P1_1=1; 
+  69   3      
+  70   3      
+  71   3                } 
+  72   2      
+  73   2      
+  74   2            if(P3_6==0) 
+  75   2      
+  76   2      
+  77   2              { 
+  78   3      
+  79   3      
+  80   3                P1_2=0; 
+  81   3      
+  82   3      
+  83   3              } 
+  84   2      
+  85   2      
+  86   2              else 
+  87   2      
+  88   2      
+  89   2                { 
+  90   3      
+  91   3      
+  92   3                  P1_2=1; 
+  93   3      
+  94   3      
+  95   3                } 
+  96   2      
+  97   2      
+  98   2            if(P3_7==0) 
+  99   2      
+ 100   2      
+ 101   2              { 
+ 102   3      
+ 103   3      
+ 104   3                P1_3=0; 
+ 105   3      
+ 106   3      
+ 107   3              } 
+ 108   2      
+ 109   2      
+ 110   2              else 
+ 111   2      
+ 112   2      
+ 113   2                { 
+ 114   3      
+ 115   3      
+ 116   3                  P1_3=1; 
+ 117   3      
+C51 COMPILER V6.12  KEY_4                                                                  12/25/2008 15:17:24 PAGE 3   
+
+ 118   3      
+ 119   3                } 
+ 120   2      
+ 121   2      
+ 122   2          } 
+ 123   1      
+ 124   1      
+ 125   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     38    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,170 @@
+C51 COMPILER V6.12  EEPROM                                                                 12/24/2008 15:58:27 PAGE 1   
+
+
+C51 COMPILER V6.12, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN .\eeprom.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE .\eeprom.c DEBUG OBJECTEXTEND
+
+stmt level    source
+
+   1          #include <intrins.h>
+   2          #include <reg52.h>      //52系列单片机头文件
+   3          #define uchar unsigned char
+   4          #define uint unsigned int 
+   5          #define RdCommand 0x01 //定义ISP的操作命令
+   6          #define PrgCommand 0x02
+   7          #define EraseCommand 0x03 
+   8          #define Error 1
+   9          #define Ok 0
+  10          #define WaitTime 0x01 //定义CPU的等待时间
+  11          sfr ISP_DATA=0xe2;  //寄存器申明
+  12          sfr ISP_ADDRH=0xe3;
+  13          sfr ISP_ADDRL=0xe4;
+  14          sfr ISP_CMD=0xe5;
+  15          sfr ISP_TRIG=0xe6;
+  16          sfr ISP_CONTR=0xe7;
+  17          sbit dula=P2^6;  //申明U1锁存器的锁存端
+  18          sbit wela=P2^7;  //申明U2锁存器的锁存端
+  19          uchar code table[]={
+  20          0x3f,0x06,0x5b,0x4f,
+  21          0x66,0x6d,0x7d,0x07,
+  22          0x7f,0x6f,0x77,0x7c,
+  23          0x39,0x5e,0x79,0x71};
+  24          uchar num;
+  25          void delayms(uint xms)    
+  26          {
+  27   1       uint i,j;
+  28   1       for(i=xms;i>0;i--)        //i=xms即延时约xms毫秒
+  29   1        for(j=110;j>0;j--);
+  30   1      }
+  31          void display(uchar shi,uchar ge)  //显示子函数
+  32          {
+  33   1          dula=1;
+  34   1       P0=table[shi];    //送十位段选数据
+  35   1       dula=0;
+  36   1       P0=0xff;  //送位选数据前关闭所有显示，防止打开位选锁存时
+  37   1       wela=1;  //原来段选数据通过位选锁存器造成混乱
+  38   1       P0=0xfe;  //送位选数据
+  39   1       wela=0;
+  40   1       delayms(5); //延时
+  41   1       dula=1;
+  42   1       P0=table[ge];  //送个位段选数据
+  43   1       dula=0;
+  44   1       P0=0xff;
+  45   1       wela=1;
+  46   1       P0=0xfd;
+  47   1       wela=0;
+  48   1       delayms(5);
+  49   1      }
+  50          /* ================ 打开 ISP,IAP 功能 ================= */
+  51          void ISP_IAP_enable(void)
+  52          {
+  53   1       EA = 0;       /* 关中断   */
+  54   1       ISP_CONTR = ISP_CONTR & 0x18;       /* 0001,1000 */
+  55   1       ISP_CONTR = ISP_CONTR | WaitTime; /* 写入硬件延时 */
+C51 COMPILER V6.12  EEPROM                                                                 12/24/2008 15:58:27 PAGE 2   
+
+  56   1       ISP_CONTR = ISP_CONTR | 0x80;       /* ISPEN=1  */
+  57   1      }
+  58          /* =============== 关闭 ISP,IAP 功能 ================== */
+  59          void ISP_IAP_disable(void)
+  60          {
+  61   1       ISP_CONTR = ISP_CONTR & 0x7f; /* ISPEN = 0 */
+  62   1       ISP_TRIG = 0x00;
+  63   1       EA   =   1;   /* 开中断 */
+  64   1      }
+  65          /* ================ 公用的触发代码 ==================== */
+  66          void ISPgoon(void)
+  67          {
+  68   1       ISP_IAP_enable();   /* 打开 ISP,IAP 功能 */
+  69   1       ISP_TRIG = 0x46;  /* 触发ISP_IAP命令字节1 */
+  70   1       ISP_TRIG = 0xb9;  /* 触发ISP_IAP命令字节2 */
+  71   1       _nop_();
+  72   1      }
+  73          /* ==================== 字节读 ======================== */
+  74          unsigned char byte_read(unsigned int byte_addr)
+  75          {
+  76   1       ISP_ADDRH = (unsigned char)(byte_addr >> 8);/* 地址赋值 */
+  77   1       ISP_ADDRL = (unsigned char)(byte_addr & 0x00ff);
+  78   1       ISP_CMD   = ISP_CMD & 0xf8;   /* 清除低3位  */
+  79   1       ISP_CMD   = ISP_CMD | RdCommand; /* 写入读命令 */
+  80   1       ISPgoon();       /* 触发执行  */
+  81   1       ISP_IAP_disable();    /* 关闭ISP,IAP功能 */
+  82   1       return (ISP_DATA);    /* 返回读到的数据 */
+  83   1      }
+  84          /* ================== 扇区擦除 ======================== */
+  85          void SectorErase(unsigned int sector_addr)
+  86          {
+  87   1       unsigned int iSectorAddr;
+  88   1       iSectorAddr = (sector_addr & 0xfe00); /* 取扇区地址 */
+  89   1       ISP_ADDRH = (unsigned char)(iSectorAddr >> 8);
+  90   1       ISP_ADDRL = 0x00;
+  91   1       ISP_CMD = ISP_CMD & 0xf8;   /* 清空低3位  */
+  92   1       ISP_CMD = ISP_CMD | EraseCommand; /* 擦除命令3  */
+  93   1       ISPgoon();       /* 触发执行  */
+  94   1       ISP_IAP_disable();    /* 关闭ISP,IAP功能 */
+  95   1      }
+  96          /* ==================== 字节写 ======================== */
+  97          void byte_write(unsigned int byte_addr, unsigned char original_data)
+  98          {
+  99   1       ISP_ADDRH = (unsigned char)(byte_addr >> 8);  /* 取地址  */
+ 100   1       ISP_ADDRL = (unsigned char)(byte_addr & 0x00ff);
+ 101   1       ISP_CMD  = ISP_CMD & 0xf8;    /* 清低3位 */
+ 102   1       ISP_CMD  = ISP_CMD | PrgCommand;  /* 写命令2 */
+ 103   1       ISP_DATA = original_data;   /* 写入数据准备 */
+ 104   1       ISPgoon();       /* 触发执行  */
+ 105   1       ISP_IAP_disable();     /* 关闭IAP功能 */
+ 106   1      }
+ 107          void main()
+ 108          {
+ 109   1       uchar a,b,num1;
+ 110   1       TMOD=0x01; //设置定时器0为工作方式1(0000 0001)
+ 111   1       TH0=(65536-50000)/256;     
+ 112   1       TL0=(65536-50000)%256;
+ 113   1       EA=1;
+ 114   1       ET0=1;
+ 115   1       TR0=1;
+ 116   1       num1=byte_read(0x2000);//程序开始时读取EEPROM中数据
+ 117   1       if(num1>=60) //防止首次上电时读取出错
+C51 COMPILER V6.12  EEPROM                                                                 12/24/2008 15:58:27 PAGE 3   
+
+ 118   1        num1=0;
+ 119   1       while(1) 
+ 120   1       {
+ 121   2        if(num>=20)
+ 122   2        {
+ 123   3         num=0;
+ 124   3         num1++;
+ 125   3         SectorErase(0x2000);//擦除扇区
+ 126   3         byte_write(0x2000,num1);//重新写入数据
+ 127   3         if(num1==60)
+ 128   3         {
+ 129   4          num1=0;
+ 130   4         }
+ 131   3         a=num1/10;
+ 132   3         b=num1%10;
+ 133   3        }
+ 134   2        display(a,b);
+ 135   2       }
+ 136   1      }
+ 137          void timer0() interrupt 1
+ 138          {
+ 139   1       TH0=(65536-50000)/256;
+ 140   1       TL0=(65536-50000)%256;
+ 141   1       num++; 
+ 142   1      }
+ 143          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    270    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
